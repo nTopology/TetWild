@@ -12,7 +12,9 @@
 #include "EdgeCollapser.h"
  
 void EdgeCollapser::init() {
+#ifndef MUTE_COUT
     energy_time = 0;
+#endif
 
     ////cal dir_edge
     //find all edges
@@ -378,10 +380,14 @@ int EdgeCollapser::collapseAnEdge(int v1_id, int v2_id) {
         return FLIP;
     }
     std::vector<TetQuality> tet_qs;
+#ifndef MUTE_COUT
     igl::Timer tmp_timer;
     tmp_timer.start();
+#endif
     calTetQualities(new_tets, tet_qs);
+#ifndef MUTE_COUT
     energy_time+=tmp_timer.getElapsedTime();
+#endif
 
     if (energy_type != ENERGY_NA && is_check_quality) {
         TetQuality old_tq, new_tq;

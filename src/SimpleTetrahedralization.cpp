@@ -54,9 +54,11 @@ void SimpleTetrahedralization::triangulation(std::vector<TetVertex>& tet_vertice
     const std::vector<Point_3>& m_vertices=MC.m_vertices;
     const std::vector<std::array<int, 3>>& m_faces=MC.m_faces;
 
+#ifndef MUTE_COUT
     igl::Timer tmp_timer;
 
     tmp_timer.start();
+#endif
     ///init
     m_vertices_size = MC.m_vertices.size();
 
@@ -201,8 +203,8 @@ void SimpleTetrahedralization::triangulation(std::vector<TetVertex>& tet_vertice
     }
 #ifndef MUTE_COUT
     cout<<"2D arr "<<tmp_timer.getElapsedTime()<<endl;
-#endif
     tmp_timer.start();
+#endif
 
     tet_vertices.reserve(bsp_vertices.size() + bsp_nodes.size());
     for (unsigned int i = 0; i < bsp_vertices.size(); i++) {
@@ -256,8 +258,8 @@ void SimpleTetrahedralization::triangulation(std::vector<TetVertex>& tet_vertice
 
 #ifndef MUTE_COUT
     cout<<"improvement "<<tmp_timer.getElapsedTime()<<endl;
-#endif
     tmp_timer.start();
+#endif
     ///cal CDT & insert tets
     std::vector<std::vector<std::array<int, 3>>> cdt_faces(bsp_faces.size(), std::vector<std::array<int, 3>>());
     CDT cdt;

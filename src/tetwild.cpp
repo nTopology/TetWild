@@ -96,7 +96,9 @@ namespace tetwild {
         std::vector<bool> &t_is_removed = MR.t_is_removed;
         std::vector<TetQuality> &tet_qualities = MR.tet_qualities;
         int t_cnt = std::count(t_is_removed.begin(), t_is_removed.end(), false);
+#ifndef MUTE_COUT
         double tmp_time = 0;
+#endif
         if (!args.is_laplacian) {
             InoutFiltering IOF(tet_vertices, tets, MR.is_surface_fs, v_is_removed, t_is_removed, tet_qualities);
 #ifndef MUTE_COUT

@@ -140,7 +140,7 @@ struct Args{
     int targeted_num_v = -1;
     std::string bg_mesh = "";
 
-    bool is_quiet = false;
+    bool is_quiet = true;
 };
 
 extern Args args;

@@ -1,140 +1,3 @@
-<<<<<<< HEAD
-################################################################################
-# TetWild CMake
-################################################################################
-cmake_minimum_required(VERSION 3.3)
-project(TetWild)
-
-################################################################################
-# Options
-################################################################################
-option(MUTE_CHECKS "Mute log and unnecassary checks" OFF)
-# ispc
-option(USE_ISPC "Use ISPC" OFF)
-# libigl library
-option(LIBIGL_USE_STATIC_LIBRARY "Use libigl as static library" OFF)
-option(LIBIGL_WITH_ANTTWEAKBAR      "Use AntTweakBar"    OFF)
-option(LIBIGL_WITH_CGAL             "Use CGAL"           ON)
-option(LIBIGL_WITH_COMISO           "Use CoMiso"         OFF)
-option(LIBIGL_WITH_CORK             "Use Cork"           OFF)
-option(LIBIGL_WITH_LIM              "Use LIM"            OFF)
-option(LIBIGL_WITH_MATLAB           "Use Matlab"         OFF)
-option(LIBIGL_WITH_MOSEK            "Use MOSEK"          OFF)
-option(LIBIGL_WITH_PNG              "Use PNG"            OFF)
-option(LIBIGL_WITH_PYTHON           "Use Python"         OFF)
-option(LIBIGL_WITH_TETGEN           "Use Tetgen"         OFF)
-option(LIBIGL_WITH_TRIANGLE         "Use Triangle"       OFF)
-option(LIBIGL_WITH_XML              "Use XML"            OFF)
-#geogram
-option(GEOGRAM_WITH_TRIANGLE        "Use Triangle"       OFF)
-# gui
-option(LIBIGL_WITH_EMBREE           "Use Embree"         OFF)
-option(LIBIGL_WITH_NANOGUI          "Use Nanogui menu"   OFF)
-option(LIBIGL_WITH_OPENGL           "Use OpenGL"         OFF)
-option(LIBIGL_WITH_OPENGL_GLFW      "Use GLFW"           OFF)
-option(LIBIGL_WITH_VIEWER           "Use OpenGL viewer"  OFF)
-
-################################################################################
-# Settings
-################################################################################
-if(NOT CMAKE_BUILD_TYPE)
-	message(STATUS "No build type selected, default to Release")
-	set(CMAKE_BUILD_TYPE "Release")
-endif()
-
-set(THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/extern/)
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-
-# Use folder in Visual Studio
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
-# Export compile flags (used for autocompletion of the C++ code)
-set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
-
-# Generate position independent code
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
-################################################################################
-# 3rd party libraries
-################################################################################
-# cgal
-find_package(CGAL REQUIRED)
-
-# libigl
-find_package(LIBIGL REQUIRED)
-
-# geogram
-include(geogram)
-
-# ispc
-SET(OBJ_FILES "")
-if(USE_ISPC)
-	add_custom_command(OUTPUT energy_ispc.o
-			COMMAND ispc -g ${CMAKE_SOURCE_DIR}/ispc/energy.ispc -h ${CMAKE_SOURCE_DIR}/ispc/energy.h -o energy_ispc.o DEPENDS ${CMAKE_SOURCE_DIR}/ispc/energy.ispc)
-	add_definitions(-DGTET_ISPC)
-    LIST(APPEND OBJ_FILES energy_ispc.o)
-endif(USE_ISPC)
-
-#cout
-if(MUTE_CHECKS)
-	add_definitions(-DMUTE_COUT)
-endif(MUTE_CHECKS)
-
-################################################################################
-# TetWild
-################################################################################
-set(SOURCE_FILES
-    src/Preprocess.h
-	src/Preprocess.cpp
-	src/DelaunayTetrahedralization.h
-	src/DelaunayTetrahedralization.cpp
-	src/MeshConformer.h
-	src/MeshConformer.cpp
-	src/BSPSubdivision.h
-	src/BSPSubdivision.cpp
-	src/SimpleTetrahedralization.h
-	src/SimpleTetrahedralization.cpp
-	src/MeshRefinement.h
-	src/MeshRefinement.cpp
-	src/LocalOperations.h
-	src/LocalOperations.cpp
-	src/EdgeSplitter.h
-	src/EdgeSplitter.cpp
-	src/EdgeCollapser.h
-	src/EdgeCollapser.cpp
-	src/EdgeRemover.h
-	src/EdgeRemover.cpp
-	src/VertexSmoother.h
-	src/VertexSmoother.cpp
-	src/InoutFiltering.h
-	src/InoutFiltering.cpp
-	src/heads.h
-	src/heads.cpp
-	src/tetwild.cpp
-	src/CLI11.hpp
-	src/TetmeshElements.h
-	# PyMesh
-	pymesh/MshLoader.h
-	pymesh/MshLoader.cpp
-	pymesh/MshSaver.h
-	pymesh/MshSaver.cpp
-	pymesh/Exception.h
-    )
-
-# Build static library for executable
-add_library(libTetWild STATIC ${SOURCE_FILES} ${OBJ_FILES})
-target_link_libraries(libTetWild geogram igl::core igl::cgal)
-target_include_directories(libTetWild SYSTEM PUBLIC ${EIGEN_INCLUDE_DIRS} include pymesh)
-set_target_properties(libTetWild PROPERTIES OUTPUT_NAME "tetwild")
-
-# Building exectuable
-set(MAIN_FILE src/main.cpp)
-add_executable(TetWild ${MAIN_FILE})
-target_link_libraries(TetWild libTetWild)
-
-# Install
-INSTALL(TARGETS TetWild RUNTIME DESTINATION bin)
-=======
 cmake_minimum_required(VERSION 3.10)
 
 if(WIN32)
@@ -145,38 +8,38 @@ endif()
 ### Sources ###
 
 set(sources
-    heads.cpp
-    heads.h
-    EdgeSplitter.cpp
-    EdgeSplitter.h
-    EdgeCollapser.cpp
-    EdgeCollapser.h
-    EdgeRemover.cpp
-    EdgeRemover.h
-    tetwild.cpp
-    tetwild.h
-    LocalOperations.cpp
-    LocalOperations.h
-    Preprocess.cpp
-    Preprocess.h
-    MeshConformer.cpp
-    MeshConformer.h
-    DelaunayTetrahedralization.cpp
-    DelaunayTetrahedralization.h
-    BSPSubdivision.cpp
-    BSPSubdivision.h
-    SimpleTetrahedralization.cpp
-    SimpleTetrahedralization.h
-    MeshRefinement.cpp
-    MeshRefinement.h
-    VertexSmoother.cpp
-    VertexSmoother.h
-    InoutFiltering.cpp
-    InoutFiltering.h
+    src/heads.cpp
+    src/heads.h
+    src/EdgeSplitter.cpp
+    src/EdgeSplitter.h
+    src/EdgeCollapser.cpp
+    src/EdgeCollapser.h
+    src/EdgeRemover.cpp
+    src/EdgeRemover.h
+    src/tetwild.cpp
+    src/LocalOperations.cpp
+    src/LocalOperations.h
+    src/Preprocess.cpp
+    src/Preprocess.h
+    src/MeshConformer.cpp
+    src/MeshConformer.h
+    src/DelaunayTetrahedralization.cpp
+    src/DelaunayTetrahedralization.h
+    src/BSPSubdivision.cpp
+    src/BSPSubdivision.h
+    src/SimpleTetrahedralization.cpp
+    src/SimpleTetrahedralization.h
+    src/MeshRefinement.cpp
+    src/MeshRefinement.h
+    src/VertexSmoother.cpp
+    src/VertexSmoother.h
+    src/InoutFiltering.cpp
+    src/InoutFiltering.h
     pymesh/MshSaver.cpp
     pymesh/MshSaver.h
     pymesh/MshLoader.cpp
     pymesh/MshLoader.h
+    pymesh/Exception.h
 )
 
 # This corrects cmake's default Visual Studio's ugly folder organization
@@ -184,8 +47,8 @@ source_group("" FILES ${sources})
 
 add_library(tetwild ${sources})
 
-target_include_directories(tetwild PUBLIC .)
+target_include_directories(tetwild PUBLIC . include pymesh)
 
-target_link_libraries(tetwild PUBLIC
-  glm geogram libigl2 cgal2)
->>>>>>> turbo changes
+set_target_properties(tetwild PROPERTIES COMPILE_FLAGS "-DMUTE_COUT")
+
+target_link_libraries(tetwild PUBLIC glm geogram libigl2 cgal2)

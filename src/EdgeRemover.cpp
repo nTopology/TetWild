@@ -12,7 +12,9 @@
 #include "EdgeRemover.h"
 
 void EdgeRemover::init() {
+#ifndef MUTE_COUT
     energy_time = 0;
+#endif
 
     const unsigned int tets_size = tets.size();
     std::vector<std::array<int, 2>> edges;
@@ -159,9 +161,13 @@ bool EdgeRemover::removeAnEdge_32(int v1_id, int v2_id, const std::vector<int>& 
         return false;
     TetQuality old_tq, new_tq;
     getCheckQuality(old_t_ids, old_tq);
+#ifndef MUTE_COUT
     tmp_timer.start();
+#endif
     calTetQualities(new_tets, tet_qs);
+#ifndef MUTE_COUT
     energy_time+=tmp_timer.getElapsedTime();
+#endif
     getCheckQuality(tet_qs, new_tq);
     if(equal_buget>0) {
         equal_buget--;
@@ -345,9 +351,13 @@ bool EdgeRemover::removeAnEdge_44(int v1_id, int v2_id, const std::vector<int>& 
 
         if (isFlip(tmp_new_tets))
             continue;
+#ifndef MUTE_COUT
         tmp_timer.start();
+#endif
         calTetQualities(tmp_new_tets, tmp_tet_qs);
+#ifndef MUTE_COUT
         energy_time+=tmp_timer.getElapsedTime();
+#endif
         getCheckQuality(tmp_tet_qs, new_tq);
         if(equal_buget>0) {
             equal_buget--;
@@ -524,9 +534,13 @@ bool EdgeRemover::removeAnEdge_56(int v1_id, int v2_id, const std::vector<int>& 
         }
 
         std::vector<TetQuality> qs;
+#ifndef MUTE_COUT
         tmp_timer.start();
+#endif
         calTetQualities(new_ts, qs);
+#ifndef MUTE_COUT
         energy_time+=tmp_timer.getElapsedTime();
+#endif
         tet_qs[i] = std::array<TetQuality, 2>({qs[0], qs[1]});
         new_tets[i] = std::array<std::array<int, 4>, 2>({new_ts[0], new_ts[1]});
 
@@ -564,9 +578,13 @@ bool EdgeRemover::removeAnEdge_56(int v1_id, int v2_id, const std::vector<int>& 
             continue;
 
         std::vector<TetQuality> qs;
+#ifndef MUTE_COUT
         tmp_timer.start();
+#endif
         calTetQualities(new_ts, qs);
+#ifndef MUTE_COUT
         energy_time+=tmp_timer.getElapsedTime();
+#endif
         for (int j = 0; j < 2; j++) {
             qs.push_back(tet_qs[(i + 1) % 5][j]);
             qs.push_back(tet_qs[(i - 1 + 5) % 5][j]);

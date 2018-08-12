@@ -66,7 +66,10 @@ public:
 
     void addNewEdge(const std::array<int, 2>& e);
 
+#ifndef MUTE_COUT
     igl::Timer tmp_timer;
+#endif
+
     double energy_time = 0;
 };
 
