@@ -82,12 +82,12 @@ target_include_directories(tetwild
 		include
 )
 
-ntop_import(libigl)
+ntop_import(cgal libigl)
 
 target_link_libraries(tetwild
 	PRIVATE
 		igl::core
-		cgal2
+		cgal::cgal
 		geogram
 	PUBLIC
 		spdlog
