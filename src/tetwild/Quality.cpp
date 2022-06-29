@@ -14,7 +14,6 @@
 #include <tetwild/TetmeshElements.h>
 #include <tetwild/Logger.h>
 #include <tetwild/Utils.h>
-#include <mmg/libmmg.h>
 #include <igl/edge_lengths.h>
 #include <igl/face_areas.h>
 #include <igl/dihedral_angles.h>

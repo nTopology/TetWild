@@ -20,7 +20,6 @@
 #include <tetwild/InoutFiltering.h>
 #include <tetwild/Utils.h>
 #include <tetwild/Quality.h>
-#include <tetwild/mmg/Remeshing.h>
 #include <igl/boundary_facets.h>
 #include <igl/bounding_box_diagonal.h>
 #include <igl/remove_unreferenced.h>
@@ -276,38 +275,6 @@ double tetwild_stage_one_preprocess(
 
     m_vertices.clear();
     m_faces.clear();
-    //optimize with mmgs
-    if (args.use_mmgs) {
-        MmgOptions opt;
-        opt.hsiz = 2.0 * igl::bounding_box_diagonal(VI);
-        opt.hgrad *= 2.0;
-        opt.hausd = state.eps_input;
-        opt.angle_detection = (args.mmg_angle_thres > 0.0);
-        opt.angle_value = args.mmg_angle_thres;
-        if (logger().level() == spdlog::level::trace) {
-            opt.verbose = 10;
-        } else if (logger().level() == spdlog::level::debug) {
-            opt.verbose = 5;
-        } else {
-            opt.verbose = 0;
-        }
-        Eigen::MatrixXd VO;
-        Eigen::MatrixXi FO;
-        if (remesh_uniform_sf(VI, FI, VO, FO, opt)) {
-            assert(VO.rows() > 0 && FO.rows() > 0);
-            // igl::write_triangle_mesh("simplified.obj", VO, FO);
-            m_vertices.reserve(VO.rows());
-            for (int v = 0; v < VO.rows(); ++v) {
-                m_vertices.emplace_back(VO(v, 0), VO(v, 1), VO(v, 2));
-            }
-            m_faces.reserve(FO.rows());
-            for (int f = 0; f < FO.rows(); ++f) {
-                m_faces.push_back({{FO(f, 0), FO(f, 1), FO(f, 2)}});
-            }
-        } else {
-            logger().warn("mmgs didn't succeed, using TetWild's simplify procedure");
-        }
-    }
     if (m_vertices.empty()) {
         pp.process(geo_sf_mesh, m_vertices, m_faces, args);
     }
@@ -520,42 +487,7 @@ void tetwild_stage_two(
     //improvement
     MR.refine(state.ENERGY_AMIPS);
 
-    //post-optimization with mmg3d
-    if (args.use_mmg3d) {
-        MmgOptions opt;
-        opt.hsiz = state.initial_edge_len;
-        opt.hausd = state.eps_input;
-        opt.angle_detection = (args.mmg_angle_thres > 0.0);
-        opt.angle_value = args.mmg_angle_thres;
-        if (logger().level() == spdlog::level::trace) {
-            opt.verbose = 10;
-        } else if (logger().level() == spdlog::level::debug) {
-            opt.verbose = 5;
-        } else {
-            opt.verbose = 0;
-        }
-        Eigen::MatrixXi FO;
-        Eigen::VectorXi R;
-        // extractRegionMesh(MR, VO, TO, R, state);
-        extractInsideMesh(VI, FI, MR, VO, TO, state);
-        // igl::writeMESH("before_mmg.mesh", VO, TO, FO);
-        logger().debug("mesh quality ok: {}", isMeshQualityOk(VO, TO));
-        logger().debug("volume ok: {}", checkVolume(VO, TO));
-        if (remesh_uniform_3d(VO, TO, R, VO, FO, TO, R, opt)) {
-            assert(VO.rows() > 0 && FO.rows() > 0);
-            // filterRegion(VO, TO, R, 1, VO, TO);
-            AO.resize(TO.rows());
-            AO.setZero(); //clear values
-        } else {
-            logger().warn("mmg3d failed to optimize the mesh, reverting to TetWild");
-            args.use_mmg3d = false;
-
-            //improvement
-            MR.refine(state.ENERGY_AMIPS, {{true, true, true, true}}, false, true);
-        }
-    } else {
-        extractFinalTetmesh(MR, VO, TO, AO, args, state); //do winding number and output the tetmesh
-    }
+    extractFinalTetmesh(MR, VO, TO, AO, args, state); //do winding number and output the tetmesh
 }
 
 ////////////////////////////////////////////////////////////////////////////////

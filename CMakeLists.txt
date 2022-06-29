@@ -69,10 +69,6 @@ add_library(tetwild STATIC
 		src/tetwild/geogram/MeshAABB.h
 		src/tetwild/geogram/Utils.cpp
 		src/tetwild/geogram/Utils.h
-		src/tetwild/mmg/Remeshing.cpp
-		src/tetwild/mmg/Remeshing.h
-		src/tetwild/mmg/internal/Conversion.cpp
-		src/tetwild/mmg/internal/Conversion.h
 )
 
 target_include_directories(tetwild
@@ -91,7 +87,6 @@ target_link_libraries(tetwild
 		geogram
 	PUBLIC
 		spdlog
-		mmg::mmg
 )
 
 # ispc
