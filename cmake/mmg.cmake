@@ -21,9 +21,6 @@ elseif(MINGW)
   set(DEF_GNU "#define GNU")
 endif()
 
-# Create mmgcommon.h file with the good release and architecture infos.
-configure_file(${MMG_SOURCE_DIR}/src/common/mmgcommon.h.in ${MMG_BINARY_DIR}/mmgcommon.h @ONLY)
-
 # Copy stupid headers
 configure_file(${MMG_SOURCE_DIR}/src/common/libmmgtypes.h ${MMG_BINARY_DIR}/mmg/mmgs/libmmgtypes.h COPYONLY)
 configure_file(${MMG_SOURCE_DIR}/src/common/libmmgtypes.h ${MMG_BINARY_DIR}/mmg/mmg2d/libmmgtypes.h COPYONLY)
