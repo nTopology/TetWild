@@ -15,11 +15,14 @@ set(CMAKE_RELEASE_VERSION
 
 if(NOT WIN32)
   # Set preprocessor flags to say that we are posix and gnu compatible
-  set(DEF_POSIX "#define POSIX")
-  set(DEF_GNU "#define GNU")
+  set(DEF_POSIX "#define MMG_POSIX")
+  set(DEF_GNU "#define MMG_GNU")
 elseif(MINGW)
-  set(DEF_GNU "#define GNU")
+   set(DEF_GNU "#define MMG_GNU")
 endif()
+
+configure_file(${MMG_SOURCE_DIR}/src/common/mmgcmakedefines.h.in ${MMG_BINARY_DIR}/mmgcmakedefines.h @ONLY)
+configure_file(${MMG_SOURCE_DIR}/src/common/mmgversion.h.in ${MMG_BINARY_DIR}/mmgversion.h @ONLY)
 
 # Copy stupid headers
 configure_file(${MMG_SOURCE_DIR}/src/common/libmmgtypes.h ${MMG_BINARY_DIR}/mmg/mmgs/libmmgtypes.h COPYONLY)
@@ -28,6 +31,10 @@ configure_file(${MMG_SOURCE_DIR}/src/common/libmmgtypes.h ${MMG_BINARY_DIR}/mmg/
 configure_file(${MMG_SOURCE_DIR}/src/mmgs/libmmgs.h ${MMG_BINARY_DIR}/mmg/mmgs/libmmgs.h COPYONLY)
 configure_file(${MMG_SOURCE_DIR}/src/mmg2d/libmmg2d.h ${MMG_BINARY_DIR}/mmg/mmg2d/libmmg2d.h COPYONLY)
 configure_file(${MMG_SOURCE_DIR}/src/mmg3d/libmmg3d.h ${MMG_BINARY_DIR}/mmg/mmg3d/libmmg3d.h COPYONLY)
+
+if(NOT WIN32)
+  configure_file(${MMG_SOURCE_DIR}/git_log_mmg.h ${MMG_BINARY_DIR}/git_log_mmg.h COPYONLY)
+endif()
 
 ################################################################################
 
@@ -120,10 +127,8 @@ set(MMG_MMG2D_SOURCES
 	mmg2d6.c
 	mmg2d9.c
 	movpt_2d.c
-	optlap_2d.c
 	quality_2d.c
 	scalem_2d.c
-	simred_2d.c
 	solmap_2d.c
 	split_2d.c
 	swapar_2d.c
@@ -161,7 +166,7 @@ set(MMG_MMG3D_SOURCES
 	mmg3d2.c
 	mmg3d3.c
 	movpt_3d.c
-	octree_3d.c
+   PRoctree_3d.c
 	optbdry_3d.c
 	optlap_3d.c
 	opttyp_3d.c

@@ -190,7 +190,7 @@ bool mmg3d_extract_iso(const Eigen::MatrixXd &VI, const Eigen::MatrixXi &FI, con
     MMG3D_Set_iparameter(mesh, met, MMG3D_IPARAM_opnbdy, int(opt.opnbdy));
     MMG3D_Set_iparameter(mesh, met, MMG3D_IPARAM_verbose, int(opt.verbose));
 
-    int ier = MMG3D_mmg3dls(mesh,met);
+    int ier = MMG3D_mmg3dls(mesh, met, NULL);
     if (ier != MMG5_SUCCESS) {
         logger().error("mmg3d_iso: failed to remesh isovalue");
         mmg3d_free(mesh, met);
