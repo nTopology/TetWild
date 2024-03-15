@@ -14,7 +14,6 @@
 #include <tetwild/CGALTypes.h>
 #include <tetwild/TetmeshElements.h>
 #include <tetwild/DisableWarnings.h>
-#include <igl/copyleft/cgal/assign_scalar.h>
 #include <igl/serialize.h>
 #include <igl/STR.h>
 #include <tetwild/EnableWarnings.h>
