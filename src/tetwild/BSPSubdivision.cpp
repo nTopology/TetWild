@@ -204,15 +204,15 @@ void BSPSubdivision::subdivideBSPNodes(const Args &args) {
                 Segment_3 seg(vertices[edges[old_e_id].vertices[0]], vertices[edges[old_e_id].vertices[1]]);
                 auto result = intersection(seg, pln);
                 if (result) {
-                    const Point_3 *p = boost::get<Point_3>(&*result);
-                    vertices.push_back(*p);
+                  const Point_3 *p = std::get<Point_3>(&*result);
+                  vertices.push_back(*p);
 
-                    new_v_id = vertices.size() - 1;
-                    on_edge.vertices.push_back(new_v_id);
-                    pos_edge.vertices.push_back(new_v_id);
-                    neg_edge.vertices.push_back(new_v_id);
+                  new_v_id = vertices.size() - 1;
+                  on_edge.vertices.push_back(new_v_id);
+                  pos_edge.vertices.push_back(new_v_id);
+                  neg_edge.vertices.push_back(new_v_id);
 
-                    v_sides[new_v_id] = V_ON;//fixed
+                  v_sides[new_v_id] = V_ON; // fixed
                 } else {
                     log_and_throw("error cal p!");
                 }

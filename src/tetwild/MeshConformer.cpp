@@ -297,10 +297,10 @@ int MeshConformer::triangleIntersection3d(const std::array<Point_3, 3>& tri1, co
             auto result = intersection(seg1, pln2);
             assert(!(!result));
             if (result) {
-                if (const Point_3 *p = boost::get<Point_3>(&*result))
-                    on_vs1.push_back(*p);
-                else
-                    throw TetWildError("MeshConformer::triangleIntersection3d");
+              if (const Point_3 *p = std::get<Point_3>(&*result))
+                on_vs1.push_back(*p);
+              else
+                throw TetWildError("MeshConformer::triangleIntersection3d");
             }
         }
     }
@@ -315,10 +315,10 @@ int MeshConformer::triangleIntersection3d(const std::array<Point_3, 3>& tri1, co
             auto result = intersection(seg2, pln1);
             assert(!(!result));
             if (result) {
-                if (const Point_3 *p = boost::get<Point_3>(&*result))
-                    on_vs2.push_back(*p);
-                else
-                    throw TetWildError("MeshConformer::triangleIntersection3d");
+              if (const Point_3 *p = std::get<Point_3>(&*result))
+                on_vs2.push_back(*p);
+              else
+                throw TetWildError("MeshConformer::triangleIntersection3d");
             }
         }
     }
@@ -380,8 +380,8 @@ Point_3 MeshConformer::to3d(const Point_2& p, const Plane_3& pln) {
 
     auto result = intersection(l, pln);
     if (result) {
-        const Point_3 *p = boost::get<Point_3>(&*result);
-        return *p;
+      const Point_3 *p = std::get<Point_3>(&*result);
+      return *p;
     } else {
         log_and_throw("error to3d!");
     }
