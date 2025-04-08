@@ -29,6 +29,17 @@ inline void serialize(const tetwild::Point_3 &p, std::vector<char> &buffer) {
 }
 
 template <>
+inline void deserialize(tetwild::Point_3 &p, const std::vector<char> &buffer) {
+  using namespace tetwild;
+  std::string s1, s2, s3;
+  ::igl::deserialize(s1, std::string("x"), buffer);
+  ::igl::deserialize(s2, std::string("y"), buffer);
+  ::igl::deserialize(s3, std::string("z"), buffer);
+  p = Point_3(CGAL_FT(std::stod(s1)), CGAL_FT(std::stod(s2)),
+              CGAL_FT(std::stod(s3)));
+}
+
+template <>
 inline void serialize(const tetwild::Point_3f &p, std::vector<char> &buffer) {
   ::igl::serialize(p[0], std::string("x"), buffer);
   ::igl::serialize(p[1], std::string("y"), buffer);
